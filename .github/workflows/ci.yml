@@ -6,10 +6,10 @@ on:
 
 jobs:
   tests:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -24,27 +24,26 @@ jobs:
 
       - name: Start API server (background)
         run: |
-          Start-Process -NoNewWindow -FilePath python -ArgumentList "-m uvicorn app.main:app --host 127.0.0.1 --port 8000"
-          Start-Sleep -Seconds 2
+          python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 &
+          sleep 5
 
-      - name: Wait for health
+      - name: Wait for health endpoint
         run: |
-          $max = 20
-          for ($i=0; $i -lt $max; $i++) {
-            try {
-              $r = Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8000/health -TimeoutSec 2
-              if ($r.StatusCode -eq 200) { Write-Host "Health OK"; exit 0 }
-            } catch {}
-            Start-Sleep -Seconds 1
-          }
-          Write-Error "API did not become healthy in time"
+          for i in {1..20}; do
+            if curl -s http://127.0.0.1:8000/health | grep -q "ok"; then
+              echo "Health OK"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "API did not become healthy"
           exit 1
 
-      - name: Run tests + HTML report
+      - name: Run tests + generate HTML report
         run: |
           python -m pytest -v --html=report.html --self-contained-html
 
-      - name: Upload report artifact
+      - name: Upload pytest HTML report
         uses: actions/upload-artifact@v4
         with:
           name: pytest-html-report
