@@ -4,6 +4,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from typing import Iterator
 
 import pytest
 import requests
@@ -14,6 +15,7 @@ from src.api_client import ApiClient
 def _wait_for_health(url: str, timeout_s: int = 20) -> None:
     deadline = time.time() + timeout_s
     last_err = None
+
     while time.time() < deadline:
         try:
             r = requests.get(url, timeout=2)
@@ -21,7 +23,9 @@ def _wait_for_health(url: str, timeout_s: int = 20) -> None:
                 return
         except Exception as e:
             last_err = e
+
         time.sleep(0.5)
+
     raise RuntimeError(f"API not healthy after {timeout_s}s. Last error: {last_err}")
 
 
@@ -31,10 +35,13 @@ def api_base_url() -> str:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def api_server(api_base_url: str):
+def api_server(api_base_url: str) -> Iterator[None]:
     """
-    Starts FastAPI server for the whole test session (unless START_API_SERVER=0).
+    Automatically starts FastAPI server for the test session.
+    Can be disabled with environment variable:
+        START_API_SERVER=0
     """
+
     start = os.getenv("START_API_SERVER", "1") != "0"
     if not start:
         yield
@@ -84,22 +91,24 @@ def api(api_base_url: str) -> ApiClient:
 @pytest.fixture(scope="session")
 def credentials() -> dict:
     """
-    Loads credentials from data/credentials.json
+    Loads test credentials from data/credentials.json
     """
-    p = Path(__file__).resolve().parent.parent / "data" / "credentials.json"
-    return json.loads(p.read_text(encoding="utf-8"))
+    path = Path(__file__).resolve().parent.parent / "data" / "credentials.json"
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 @pytest.fixture()
-def auth_api(api: ApiClient, credentials: dict) -> ApiClient:
+def auth_api(api: ApiClient, credentials: dict) -> Iterator[ApiClient]:
     """
-    Logs in before each test, sets Bearer token on ApiClient,
-    and clears token afterwards.
+    Logs in before each test and sets Bearer token.
+    Clears token after test.
     """
-    r = api.post("/api/login", json=credentials["valid"])
-    assert r.status_code == 200, f"Login failed: {r.status_code} {r.text}"
-    token = r.json()["token"]
+    response = api.post("/api/login", json=credentials["valid"])
+    assert response.status_code == 200, f"Login failed: {response.status_code} {response.text}"
 
+    token = response.json()["token"]
     api.set_bearer_token(token)
+
     yield api
+
     api.set_bearer_token(None)
