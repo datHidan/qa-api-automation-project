@@ -1,7 +1,9 @@
+import json
 import os
 import subprocess
 import sys
 import time
+from pathlib import Path
 
 import pytest
 import requests
@@ -31,24 +33,26 @@ def api_base_url() -> str:
 @pytest.fixture(scope="session", autouse=True)
 def api_server(api_base_url: str):
     """
-    Starts FastAPI server for the whole test session (unless API_BASE_URL points elsewhere).
-    Set START_API_SERVER=0 to disable local startup (useful if you run server manually).
+    Starts FastAPI server for the whole test session (unless START_API_SERVER=0).
     """
     start = os.getenv("START_API_SERVER", "1") != "0"
     if not start:
         yield
         return
 
-    # Start uvicorn as subprocess
     cmd = [
-        sys.executable, "-m", "uvicorn",
+        sys.executable,
+        "-m",
+        "uvicorn",
         "app.main:app",
-        "--host", "127.0.0.1",
-        "--port", "8000",
-        "--log-level", "warning",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8000",
+        "--log-level",
+        "warning",
     ]
 
-    # On Windows, avoid opening a new console window
     creationflags = 0
     if sys.platform.startswith("win"):
         creationflags = subprocess.CREATE_NO_WINDOW  # type: ignore[attr-defined]
@@ -75,3 +79,27 @@ def api_server(api_base_url: str):
 @pytest.fixture(scope="session")
 def api(api_base_url: str) -> ApiClient:
     return ApiClient(api_base_url)
+
+
+@pytest.fixture(scope="session")
+def credentials() -> dict:
+    """
+    Loads credentials from data/credentials.json
+    """
+    p = Path(__file__).resolve().parent.parent / "data" / "credentials.json"
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
+@pytest.fixture()
+def auth_api(api: ApiClient, credentials: dict) -> ApiClient:
+    """
+    Logs in before each test, sets Bearer token on ApiClient,
+    and clears token afterwards.
+    """
+    r = api.post("/api/login", json=credentials["valid"])
+    assert r.status_code == 200, f"Login failed: {r.status_code} {r.text}"
+    token = r.json()["token"]
+
+    api.set_bearer_token(token)
+    yield api
+    api.set_bearer_token(None)
