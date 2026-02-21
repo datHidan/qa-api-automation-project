@@ -40,7 +40,6 @@ graph TD
     H --> I[Generate HTML Report]
 ```
 📁 Project Structure
-
 qa-api-automation-project/
 ├── .github/workflows/
 │   └── ci.yml
@@ -58,69 +57,89 @@ qa-api-automation-project/
 │   └── test_users.py
 ├── requirements.txt
 └── README.md
-
 🚀 How to Run Locally
-1️⃣ Setup Virtual Environment
+1️⃣ Create Virtual Environment
+python -m venv .venv
+
+Activate:
+
 Windows:
 
-python -m venv .venv
 .venv\Scripts\Activate.ps1
+
 Linux/Mac:
 
-python -m venv .venv
 source .venv/bin/activate
 2️⃣ Install Dependencies
-
 pip install -r requirements.txt
 3️⃣ Run Tests
-The FastAPI server is automatically started and stopped by the PyTest lifecycle.
-
 python -m pytest -v
-🧪 Reporting & Auth
-Generate HTML Test Report
-To generate a standalone, styled report, run:
 
+The FastAPI server is automatically started and stopped by PyTest.
+
+🧪 Generate HTML Report
 python -m pytest --html=report.html --self-contained-html
-Pak otevři soubor report.html v prohlížeči.
 
+Open:
+
+report.html
 🔐 Authentication Flow
-/api/login vrací dočasný Bearer token.
 
-Chráněné endpointy vyžadují hlavičku: Authorization: Bearer <token>.
+/api/login returns a mock Bearer token
 
-Token je automaticky spravován a injektován do testů přes fixture auth_api.
+Protected endpoints require:
+
+Authorization: Bearer <token>
+
+The token is automatically injected using the auth_api fixture.
 
 🧱 Test Strategy
-Positive/Negative Scenarios: Validace očekávaného chování i chybových stavů.
 
-Security: Ověření neautorizovaného přístupu (401).
+Positive and negative scenarios
 
-Edge Cases: Validace nenalezených zdrojů (404) a nevalidních dat.
+Unauthorized access validation (401)
 
-Schema Validation: Kontrola, zda odpovědi odpovídají JSON schématu.
+Resource not found validation (404)
 
-Isolation: Nezávislá testovací data a čistý teardown pro každý běh.
+JSON schema contract validation
+
+Token-based authentication
+
+Independent test data
+
+Automatic setup & teardown
 
 🔄 CI Pipeline
-GitHub Actions workflow běží při každém pushi:
 
-Setup: Příprava Python prostředí.
+On every push:
 
-Dependencies: Instalace knihoven.
+Setup Python environment
 
-Execution: Spuštění PyTest suite (včetně automatického startu API).
+Install dependencies
 
-Artifacts: Nahrání HTML reportu pro audit.
+Run PyTest suite
+
+Generate HTML report
+
+Upload report as artifact
 
 🎯 Key Skills Demonstrated
-Frameworks: PyTest, FastAPI, Requests.
 
-Architecture: Page Object Model (POM) koncept aplikovaný na API.
+PyTest test architecture
 
-DevOps: GitHub Actions, automatizace serverových procesů.
+FastAPI backend simulation
 
-Quality: JSON Schema validation, CI/CD integrace.
+Bearer authentication handling
+
+Fixture lifecycle orchestration
+
+JSON Schema validation
+
+CI/CD integration
+
+Clean, maintainable project structure
 
 👤 Author
+
 Jiří Kodejš
 QA Engineer
