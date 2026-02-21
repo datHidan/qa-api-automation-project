@@ -5,6 +5,7 @@ A portfolio-ready API test automation project built with modern Python tools.
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Framework](https://img.shields.io/badge/framework-PyTest-yellow.svg)](https://docs.pytest.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![CI Pipeline](https://github.com/vase-uzivatelske-jmeno/qa-api-automation-project/actions/workflows/ci.yml/badge.svg)](https://github.com/vase-uzivatelske-jmeno/qa-api-automation-project/actions)
 
 ---
 
@@ -12,13 +13,15 @@ A portfolio-ready API test automation project built with modern Python tools.
 
 This project demonstrates a complete, production-grade API test automation setup:
 
-* **Local Mock API:** Built with **FastAPI** to simulate real-world endpoints.
-* **Automatic Orchestration:** Server startup and teardown via PyTest fixtures.
-* **Authentication:** Full Bearer token flow implementation.
-* **Data Driven:** Test data management using JSON files.
-* **Contract Testing:** Schema validation using `jsonschema`.
-* **CI/CD:** Automated pipeline with **GitHub Actions**.
-* **Reporting:** Detailed HTML test reports generated after execution.
+- **Local Mock API** built with FastAPI  
+- **Automatic server orchestration** via PyTest fixtures  
+- **Bearer token authentication flow**  
+- **Data-driven testing** using JSON files  
+- **Contract validation** with `jsonschema`  
+- **CI/CD pipeline** powered by GitHub Actions  
+- **HTML test reporting**
+
+The goal is to simulate a real-world backend testing environment similar to banking or enterprise systems.
 
 ---
 
@@ -26,17 +29,15 @@ This project demonstrates a complete, production-grade API test automation setup
 
 ```mermaid
 graph TD
-    subgraph Local_or_CI_Environment
-        A[PyTest Runner] --> B[Fixture: Start FastAPI Server]
-        B --> C[Fixture: Auth & Token Acquisition]
-        C --> D{Execute Test Suite}
-        D --> E[test_login.py]
-        D --> F[test_users.py]
-        E --> G[PyTest Teardown]
-        F --> G
-        G --> H[Fixture: Stop FastAPI Server]
-        H --> I[Generate HTML Report]
-    end
+    A[PyTest Runner] --> B[Start FastAPI Server Fixture]
+    B --> C[Login & Get Token]
+    C --> D[Execute Test Suite]
+    D --> E[test_login.py]
+    D --> F[test_users.py]
+    E --> G[Teardown]
+    F --> G
+    G --> H[Stop FastAPI Server]
+    H --> I[Generate HTML Report]
 📁 Project Structure
 Plaintext
 qa-api-automation-project/
