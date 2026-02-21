@@ -38,7 +38,7 @@ graph TD
     F --> G
     G --> H[Stop FastAPI Server]
     H --> I[Generate HTML Report]
-    
+```
 📁 Project Structure
 Plaintext
 qa-api-automation-project/
@@ -125,4 +125,5 @@ DevOps: GitHub Actions, automatizace serverových procesů.
 Quality: JSON Schema validation, CI/CD integrace.
 
 👤 Author
-Jiří Kodejš QA Engineer
+Jiří Kodejš
+QA Engineer
