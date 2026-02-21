@@ -5,7 +5,7 @@ A portfolio-ready API test automation project built with modern Python tools.
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Framework](https://img.shields.io/badge/framework-PyTest-yellow.svg)](https://docs.pytest.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![CI Pipeline](https://github.com/vase-uzivatelske-jmeno/qa-api-automation-project/actions/workflows/ci.yml/badge.svg)](https://github.com/vase-uzivatelske-jmeno/qa-api-automation-project/actions)
+[![CI Pipeline](https://github.com/datHidan/qa-api-automation-project/actions/workflows/ci.yml/badge.svg)](https://github.com/datHidan/qa-api-automation-project/actions)
 
 ---
 
@@ -39,7 +39,9 @@ graph TD
     G --> H[Stop FastAPI Server]
     H --> I[Generate HTML Report]
 ```
-📁 Project Structure
+
+## 📁 Project Structure
+```text
 qa-api-automation-project/
 ├── .github/workflows/
 │   └── ci.yml
@@ -57,89 +59,81 @@ qa-api-automation-project/
 │   └── test_users.py
 ├── requirements.txt
 └── README.md
-🚀 How to Run Locally
-1️⃣ Create Virtual Environment
-python -m venv .venv
+```
+## 🚀 How to Run Locally
 
+1️⃣ Create Virtual Environment
+```bash
+python -m venv .venv
+```
 Activate:
 
 Windows:
-
+```bash
 .venv\Scripts\Activate.ps1
-
+```
 Linux/Mac:
-
+```bash
 source .venv/bin/activate
+```
 2️⃣ Install Dependencies
+```bash
 pip install -r requirements.txt
+```
 3️⃣ Run Tests
+```bash
 python -m pytest -v
-
+```
 The FastAPI server is automatically started and stopped by PyTest.
 
-🧪 Generate HTML Report
+## 🧪 Generate HTML Report
+```bash
 python -m pytest --html=report.html --self-contained-html
-
+```
 Open:
-
+```text
 report.html
-🔐 Authentication Flow
+```
+## 🔐 Authentication Flow
 
 /api/login returns a mock Bearer token
 
 Protected endpoints require:
-
+```text
 Authorization: Bearer <token>
-
+```
 The token is automatically injected using the auth_api fixture.
 
-🧱 Test Strategy
+## 🧱 Test Strategy
 
-Positive and negative scenarios
+- Positive and negative scenarios
+- Unauthorized access validation (401)
+- Resource not found validation (404)
+- JSON schema contract validation
+- Token-based authentication
+- Independent test data
+- Automatic setup & teardown
 
-Unauthorized access validation (401)
+## 🔄 CI Pipeline
 
-Resource not found validation (404)
+- On every push:
+- Setup Python environment
+- Install dependencies
+- Run PyTest suite
+- Generate HTML report
+- Upload report as artifact
 
-JSON schema contract validation
+## 🎯 Key Skills Demonstrated
 
-Token-based authentication
+- PyTest test architecture
+- FastAPI backend simulation
+- Bearer authentication handling
+- Fixture lifecycle orchestration
+- JSON Schema validation
+- CI/CD integration
+- Clean, maintainable project structure
 
-Independent test data
+## 👤 Author
 
-Automatic setup & teardown
-
-🔄 CI Pipeline
-
-On every push:
-
-Setup Python environment
-
-Install dependencies
-
-Run PyTest suite
-
-Generate HTML report
-
-Upload report as artifact
-
-🎯 Key Skills Demonstrated
-
-PyTest test architecture
-
-FastAPI backend simulation
-
-Bearer authentication handling
-
-Fixture lifecycle orchestration
-
-JSON Schema validation
-
-CI/CD integration
-
-Clean, maintainable project structure
-
-👤 Author
-
-Jiří Kodejš
+Jiří Kodejš  
 QA Engineer
