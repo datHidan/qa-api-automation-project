@@ -38,6 +38,7 @@ graph TD
     F --> G
     G --> H[Stop FastAPI Server]
     H --> I[Generate HTML Report]
+    
 📁 Project Structure
 Plaintext
 qa-api-automation-project/
