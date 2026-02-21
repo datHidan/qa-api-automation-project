@@ -40,49 +40,46 @@ graph TD
     H --> I[Generate HTML Report]
 ```
 📁 Project Structure
-Plaintext
+
 qa-api-automation-project/
 ├── .github/workflows/
-│   └── ci.yml             # GitHub Actions CI configuration
-├── app/                   # FastAPI mock backend
+│   └── ci.yml
+├── app/
 │   ├── main.py
 │   ├── schemas.py
 │   └── store.py
 ├── data/
-│   └── credentials.json   # Test data & environment variables
+│   └── credentials.json
 ├── src/
-│   └── api_client.py      # API client abstraction (Requests wrapper)
+│   └── api_client.py
 ├── tests/
-│   ├── conftest.py        # Shared fixtures & server lifecycle
-│   ├── test_login.py      # Auth-specific scenarios
-│   └── test_users.py      # CRUD & User management scenarios
-├── requirements.txt       # Project dependencies
-└── README.md              # Documentation
+│   ├── conftest.py
+│   ├── test_login.py
+│   └── test_users.py
+├── requirements.txt
+└── README.md
+
 🚀 How to Run Locally
 1️⃣ Setup Virtual Environment
 Windows:
 
-Bash
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 Linux/Mac:
 
-Bash
 python -m venv .venv
 source .venv/bin/activate
 2️⃣ Install Dependencies
-Bash
+
 pip install -r requirements.txt
 3️⃣ Run Tests
 The FastAPI server is automatically started and stopped by the PyTest lifecycle.
 
-Bash
 python -m pytest -v
 🧪 Reporting & Auth
 Generate HTML Test Report
 To generate a standalone, styled report, run:
 
-Bash
 python -m pytest --html=report.html --self-contained-html
 Pak otevři soubor report.html v prohlížeči.
 
